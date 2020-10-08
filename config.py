@@ -2,10 +2,10 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--sort', type=str, default='ESRGAN', choices=['SRGAN', 'ESRGAN'])
+parser.add_argument('--sort', type=str, default='SRGAN', choices=['SRGAN', 'ESRGAN'])
 parser.add_argument('--disc_type', type=str, default='conv', choices=['fcn', 'conv', 'patch'])
 
-parser.add_argument('--batch_size', type=int, default=2, help='mini-batch size for train. Recommend 8 for SRGAN and 2 for ESRGAN.')
+parser.add_argument('--batch_size', type=int, default=1, help='mini-batch size for train. Recommend 8 for SRGAN and 2 for ESRGAN.')
 parser.add_argument('--val_batch_size', type=int, default=1, help='mini-batch size for validation')
 parser.add_argument('--image_size', type=int, default=512, help='image size')
 parser.add_argument('--crop_size', type=int, default=128, help='image crop size')

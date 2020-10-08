@@ -18,12 +18,12 @@ If you have any appropriate methods or (hyper) parameters, please let me know. I
 
 ### 2. Qualitative Results
 
-| Sort | Image 1 | Image 2 |
-|:---:|:---:|:---:|
-| Target | <img src = './results/single/Inference_Samples_TARGET_024.png'> | <img src = './results/single/Inference_Samples_TARGET_049.png'> |
-| Bicubic | <img src = './results/single/Inference_Samples_BICUBIC_024.png'> | <img src = './results/single/Inference_Samples_BICUBIC_049.png'> |
-| SRGAN | <img src = './results/single/Inference_Samples_SRGAN_024.png'> | <img src = './results/single/Inference_Samples_SRGAN_049.png'> |
-| ESRGAN | <img src = './results/single/Inference_Samples_ESRGAN_024.png'> | <img src = './results/single/Inference_Samples_ESRGAN_049.png'> |
+| Sort | Image 1 | Image 2 | Image 3 |
+|:---:|:---:|:---:|:---:|
+| Target | <img src = './results/single/Inference_Samples_TARGET_024.png'> | <img src = './results/single/Inference_Samples_TARGET_049.png'> | <img src = './results/single/Inference_Samples_TARGET_052.png'> |
+| Bicubic | <img src = './results/single/Inference_Samples_BICUBIC_024.png'> | <img src = './results/single/Inference_Samples_BICUBIC_049.png'> | <img src = './results/single/Inference_Samples_BICUBIC_052.png'> |
+| SRGAN | <img src = './results/single/Inference_Samples_SRGAN_024.png'> | <img src = './results/single/Inference_Samples_SRGAN_049.png'> | <img src = './results/single/Inference_Samples_SRGAN_052.png'> |
+| ESRGAN | <img src = './results/single/Inference_Samples_ESRGAN_024.png'> | <img src = './results/single/Inference_Samples_ESRGAN_049.png'> | <img src = './results/single/Inference_Samples_ESRGAN_052.png'> |
 
 
 ### 3. Run the Codes
@@ -35,23 +35,22 @@ python prepare_dataset.py
 After running the code, the directory should be the same as follows:
 ```
 +---[data]
-|   \---[horse2zebra]
-|       \----[train_hr]
-|               +---[0000.png]
-|               |...
-|               +---[0799.png]
-|       \----[train_lr]
-|               +---[0000.png]
-|               |...
-|               +---[0799.png]
-|       \---[val_hr]
-|               +---[0000.png]
-|               |...
-|               +---[0099.png]
-|       \---[val_lr]
-|               +---[0000.png]
-|               |...
-|               +---[0099.png]
+     \----[train_hr]
+           +---[0000.png]
+           |...
+           +---[0799.png]
+     \----[train_lr]
+           +---[0000.png]
+           |...
+           +---[0799.png]
+     \---[val_hr]
+           +---[0000.png]
+           |...
+           +---[0099.png]
+     \---[val_lr]
+           +---[0000.png]
+           |...
+           +---[0099.png]
 +---config.py
 +---download_dataset.sh
 |   ...
