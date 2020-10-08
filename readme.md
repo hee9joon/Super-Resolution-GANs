@@ -6,7 +6,7 @@ This repository contains implementations of SRGAN and ESRGAN.
 - [ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks](https://arxiv.org/abs/1809.00219)
 
 I used the [DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/) dataset and aimed to upscale 128 resolution image 512 one. 
-Unfortunately I couldn't yield the results from the paper. 
+Unfortunately I couldn't yield the 'photo-realistic' results like samples in the papers. 
 If you have any appropriate methods or (hyper) parameters, please let me know. I will modify it.
 
 ### 1. Quantitative Analysis
@@ -16,7 +16,7 @@ If you have any appropriate methods or (hyper) parameters, please let me know. I
 | SRGAN | 12.241 ± 2.561 | 0.893 ± 0.471 | 0.542 ± 0.091 |
 | ESRGAN | 27.132 ± 3.095 | 0.169 ± 0.107 | 0.797 ± 0.086 |
 
-### 2. Qualitative Results
+### 2. Qualitative Anaylsis
 
 | Sort | Image 1 | Image 2 | Image 3 |
 |:---:|:---:|:---:|:---:|
@@ -35,19 +35,19 @@ python prepare_dataset.py
 After running the code, the directory should be the same as follows:
 ```
 +---[data]
-     \----[train_hr]
+     \----[hr_train]
            +---[0000.png]
            |...
            +---[0799.png]
-     \----[train_lr]
+     \----[lr_train]
            +---[0000.png]
            |...
            +---[0799.png]
-     \---[val_hr]
+     \---[hr_valid]
            +---[0000.png]
            |...
            +---[0099.png]
-     \---[val_lr]
+     \---[lr_valid]
            +---[0000.png]
            |...
            +---[0099.png]
@@ -69,7 +69,7 @@ python train.py --sort 'ESRGAN'
 Also, you can choose the discriminator type using `--disc type` option. It supports `fcn`, `conv`, `patch`, which stands for `fully connected layers`, `fully convolutional layers` and `PatchGAN`. 
 
 #### 3) Generate Samples (Single Image)
-Place the weights file of both networks to `./results/weights`.
+Place the weights file of both networks to `./results/weights/`.
 
 ```
 python single_inference.py

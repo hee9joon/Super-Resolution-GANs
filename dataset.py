@@ -10,11 +10,11 @@ class DIV2K(Dataset):
         super(DIV2K, self).__init__()
 
         self.sort = sort
-        self.train_hr_path = './data/train_hr/'
-        self.train_lr_path = './data/train_lr/'
+        self.train_hr_path = './data/hr_train/'
+        self.train_lr_path = './data/lr_train/'
 
-        self.val_hr_path = './data/val_hr/'
-        self.val_lr_path = './data/val_lr/'
+        self.val_hr_path = './data/hr_valid/'
+        self.val_lr_path = './data/lr_valid/'
 
         self.image_size = image_size
         self.crop_size = crop_size
