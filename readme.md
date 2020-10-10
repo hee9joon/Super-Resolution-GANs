@@ -5,8 +5,8 @@ This repository contains implementations of SRGAN and ESRGAN.
 - [Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](https://arxiv.org/abs/1609.04802)
 - [ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks](https://arxiv.org/abs/1809.00219)
 
-I used the [DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/) dataset and aimed to upscale 128 resolution image 512 one. 
-Unfortunately I couldn't yield the 'photo-realistic' results like samples in the papers. 
+I used the [DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/) dataset and aimed to upscale 128x128 resolution images to 512x512 resolution images. 
+Unfortunately I couldn't yield the 'photo-realistic' results similar to samples in the papers. 
 If you have any appropriate methods or (hyper) parameters, please let me know. I will modify it.
 
 ### 1. Quantitative Analysis
@@ -35,22 +35,22 @@ python prepare_dataset.py
 After running the code, the directory should be the same as follows:
 ```
 +---[data]
-     \----[hr_train]
-           +---[0000.png]
-           |...
-           +---[0799.png]
-     \----[lr_train]
-           +---[0000.png]
-           |...
-           +---[0799.png]
-     \---[hr_valid]
-           +---[0000.png]
-           |...
-           +---[0099.png]
-     \---[lr_valid]
-           +---[0000.png]
-           |...
-           +---[0099.png]
+|    \----[hr_train]
+|          +---[0000.png]
+|          |...
+|          +---[0799.png]
+|    \----[lr_train]
+|          +---[0000.png]
+|          |...
+|          +---[0799.png]
+|    \---[hr_valid]
+|          +---[0000.png]
+|          |...
+|          +---[0099.png]
+|    \---[lr_valid]
+|          +---[0000.png]
+|          |...
+|          +---[0099.png]
 +---config.py
 +---download_dataset.sh
 |   ...
@@ -66,10 +66,10 @@ python train.py --sort 'SRGAN'
 ```
 python train.py --sort 'ESRGAN'
 ```
-Also, you can choose the discriminator type using `--disc type` option. It supports `fcn`, `conv`, `patch`, which stands for `fully connected layers`, `fully convolutional layers` and `PatchGAN`. 
+Also, you can choose the discriminator type using `--disc type` option. It supports `fcn`, `conv` and `patch`, which stands for `fully connected layers`, `fully convolutional layers` and `PatchGAN`, respectively.
 
 #### 3) Generate Samples (Single Image)
-Place the weights file of both networks to `./results/weights/`.
+You will need two weight files of each network. Place the both weight files to `./results/weights/`.
 
 ```
 python single_inference.py
