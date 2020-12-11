@@ -10,7 +10,7 @@ Unfortunately I couldn't yield the 'photo-realistic' results similar to samples 
 If you have any appropriate methods or (hyper) parameters, please let me know. I will modify it.
 
 ### 1. Quantitative Analysis
-| Method | PSNR | MSE | SSIM |
+| Method | PSNR↑ | MSE↓ | SSIM↑ |
 |:---:|:---:|:---:|:---:|
 | Bicubic | 25.137 ± 2.832 | 0.244 ± 0.172 | 0.714 ± 0.113 |
 | SRGAN | 12.241 ± 2.561 | 0.893 ± 0.471 | 0.542 ± 0.091 |
