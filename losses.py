@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
-import torchvision.models as models
+from torchvision.models import vgg19
 
 
 class TVLoss(nn.Module):
-    """Total Variation Loss for Super Resolution GAN"""
+    """Total Variation Loss for SRGAN"""
     def __init__(self, tv_loss_weight=1):
         super(TVLoss, self).__init__()
         self.tv_loss_weight = tv_loss_weight
@@ -25,36 +25,46 @@ class TVLoss(nn.Module):
 
 
 class PerceptualLoss(nn.Module):
-    """Perception Loss using VGG19 for Enhanced Super Resolution GAN"""
+    """Perception Loss using VGG19 for SRGAN and ESRGAN"""
     def __init__(self, sort):
         super(PerceptualLoss, self).__init__()
 
         self.sort = sort
-        vgg = models.vgg19(pretrained=True)
+
+        # Set Different Activation Function #
         if self.sort == "SRGAN":
             relu = 31
         elif self.sort == "ESRGAN":
             relu = 35
         else:
             raise NotImplementedError
+
+        # Modify VGG19 #
+        vgg = vgg19(pretrained=True)
         model = nn.Sequential(*list(vgg.features)[:relu])
         model = model.eval()
 
+        # Freeze VGG19 #
         for param in model.parameters():
             param.requires_grad = False
 
         self.vgg = model
+
+        # Loss Function #
         self.mae_loss = nn.L1Loss()
         self.mse_loss = nn.MSELoss()
 
     def forward(self, source, target):
+        # Forward Data #
         source_feature = self.vgg(source)
         target_feature = self.vgg(target)
+
+        # Calculate Perceptual Loss #
         if self.sort == "SRGAN":
-            perception_loss = self.mse_loss(source_feature, target_feature)
+            perceptual_loss = self.mse_loss(source_feature, target_feature)
         elif self.sort == "ESRGAN":
-            perception_loss = self.mae_loss(source_feature, target_feature)
+            perceptual_loss = self.mae_loss(source_feature, target_feature)
         else:
             raise NotImplementedError
 
-        return perception_loss
+        return perceptual_loss
