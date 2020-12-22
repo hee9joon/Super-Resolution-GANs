@@ -1,11 +1,11 @@
-import torch
-import torch.nn as nn
-import torch.backends.cudnn as cudnn
-
 import os
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
+
+import torch
+import torch.nn as nn
+import torch.backends.cudnn as cudnn
 
 from config import *
 from dataset import get_div2k_loader
@@ -47,11 +47,12 @@ def train():
     total_batch = len(train_div2k_loader)
 
     # Prepare Networks #
-    D = Discriminator().to(device)
+    D = Discriminator()
+
     if config.sort == 'SRGAN':
-        G = Generator_SRGAN().to(device)
+        G = Generator_SRGAN()
     elif config.sort == 'ESRGAN':
-        G = Generator_ESRGAN().to(device)
+        G = Generator_ESRGAN()
     else:
         raise NotImplementedError
 
@@ -62,15 +63,17 @@ def train():
     # Loss Function #
     criterion_Perceptual = PerceptualLoss(sort=config.sort).to(device)
 
+    # For SRGAN #
     criterion_MSE = nn.MSELoss()
     criterion_TV = TVLoss()
 
+    # For ESRGAN #
     criterion_BCE = nn.BCEWithLogitsLoss()
     criterion_Content = nn.L1Loss()
 
     # Optimizers #
-    D_optim = torch.optim.Adam(D.parameters(), lr=config.lr)
-    G_optim = torch.optim.Adam(G.parameters(), lr=config.lr)
+    D_optim = torch.optim.Adam(D.parameters(), lr=config.lr, betas=(0.9, 0.999))
+    G_optim = torch.optim.Adam(G.parameters(), lr=config.lr, betas=(0.9, 0.999))
 
     D_optim_scheduler = get_lr_scheduler(D_optim)
     G_optim_scheduler = get_lr_scheduler(G_optim)
@@ -80,6 +83,7 @@ def train():
 
     # Train #
     print("Training {} started with total epoch of {}.".format(config.sort, config.num_epochs))
+
     for epoch in range(config.num_epochs):
         for i, (high, low) in enumerate(train_div2k_loader):
 
@@ -101,28 +105,40 @@ def train():
 
             set_requires_grad(D, requires_grad=True)
 
+            # Generate Fake HR Images #
             fake_high = G(low)
 
             if config.sort == 'SRGAN':
+
+                # Forward Data #
                 prob_real = D(high)
                 prob_fake = D(fake_high.detach())
+
+                # Calculate Total Discriminator Loss #
                 D_loss = 1 - prob_real.mean() + prob_fake.mean()
 
             elif config.sort == 'ESRGAN':
+
+                # Forward Data #
                 prob_real = D(high)
                 prob_fake = D(fake_high.detach())
 
+                # Relativistic Discriminator #
                 diff_r2f = prob_real - prob_fake.mean()
                 diff_f2r = prob_fake - prob_real.mean()
 
+                # Labels #
                 real_labels = torch.ones(diff_r2f.size()).to(device)
                 fake_labels = torch.zeros(diff_f2r.size()).to(device)
 
+                # Adversarial Loss #
                 D_loss_real = criterion_BCE(diff_r2f, real_labels)
                 D_loss_fake = criterion_BCE(diff_f2r, fake_labels)
 
+                # Calculate Total Discriminator Loss #
                 D_loss = (D_loss_real + D_loss_fake).mean()
 
+            # Back Propagation and Update #
             D_loss.backward()
             D_optim.step()
 
@@ -133,39 +149,53 @@ def train():
             set_requires_grad(D, requires_grad=False)
 
             if config.sort == 'SRGAN':
+
+                # Adversarial Loss #
                 prob_fake = D(fake_high).mean()
                 G_loss_adversarial = torch.mean(1 - prob_fake)
                 G_loss_mse = criterion_MSE(fake_high, high)
 
+                # Perceptual Loss #
                 lambda_perceptual = 6e-3
                 G_loss_perceptual = criterion_Perceptual(fake_high, high)
 
+                # Total Variation Loss #
                 G_loss_tv = criterion_TV(fake_high)
 
+                # Calculate Total Generator Loss #
                 G_loss = config.lambda_adversarial * G_loss_adversarial + G_loss_mse + lambda_perceptual * G_loss_perceptual + config.lambda_tv * G_loss_tv
 
             elif config.sort == 'ESRGAN':
+
+                # Forward Data #
                 prob_real = D(high)
                 prob_fake = D(fake_high)
 
+                # Relativistic Discriminator #
                 diff_r2f = prob_real - prob_fake.mean()
                 diff_f2r = prob_fake - prob_real.mean()
 
+                # Labels #
                 real_labels = torch.ones(diff_r2f.size()).to(device)
                 fake_labels = torch.zeros(diff_f2r.size()).to(device)
 
+                # Adversarial Loss #
                 G_loss_bce_real = criterion_BCE(diff_f2r, real_labels)
                 G_loss_bce_fake = criterion_BCE(diff_r2f, fake_labels)
 
                 G_loss_bce = (G_loss_bce_real + G_loss_bce_fake).mean()
 
+                # Perceptual Loss #
                 lambda_perceptual = 1e-2
                 G_loss_perceptual = criterion_Perceptual(fake_high, high)
 
+                # Content Loss #
                 G_loss_content = criterion_Content(fake_high, high)
 
+                # Calculate Total Generator Loss #
                 G_loss = config.lambda_bce * G_loss_bce + lambda_perceptual * G_loss_perceptual + config.lambda_content * G_loss_content
 
+            # Back Propagation and Update #
             G_loss.backward()
             G_optim.step()
 

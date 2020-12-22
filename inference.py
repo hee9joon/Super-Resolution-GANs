@@ -12,7 +12,6 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 def inference(generator, data_loader, epoch, path):
-    """Calculate metric of GT and Generated Images and Save Results"""
 
     # Inference Path #
     results_path = os.path.join(path, '{}_Epoch_{}'.format(config.sort, epoch+1))
@@ -20,9 +19,9 @@ def inference(generator, data_loader, epoch, path):
         os.makedirs(results_path)
 
     # Lists #
-    PSNR_GT_values, PSNR_Gen_values = [], []
-    MSE_GT_values, MSE_Gen_values = [], []
-    SSIM_GT_values, SSIM_Gen_values = [], []
+    PSNR_GT_values, PSNR_Gen_values = list(), list()
+    MSE_GT_values, MSE_Gen_values = list(), list()
+    SSIM_GT_values, SSIM_Gen_values = list(), list()
 
     # Up-sampling Network #
     up_sampler = torch.nn.Upsample(scale_factor=config.upscale_factor, mode='bicubic').to(device)
@@ -34,6 +33,7 @@ def inference(generator, data_loader, epoch, path):
     ############################################################################
     # Calculate Metric for Ground Truths and Generated Metric and Save Results #
     ############################################################################
+
     print("Inference Results at Epoch {} follows:".format(epoch+1))
     for i, (high, low) in enumerate(data_loader):
 

@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 
 
 class DIV2K(Dataset):
+    """DIV2K Dataset"""
     def __init__(self, sort, image_size, crop_size, upscale_factor):
         super(DIV2K, self).__init__()
 
@@ -60,6 +61,7 @@ class DIV2K(Dataset):
 
 
 def get_div2k_loader(sort, batch_size, image_size, upscale_factor, crop_size):
+    """Prepare DIV2K Loader"""
     if sort == 'train':
         dataset = DIV2K(sort, image_size, crop_size, upscale_factor)
         data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)

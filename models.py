@@ -9,7 +9,6 @@ from config import *
 
 class Discriminator(nn.Module):
     """Discriminator Network for Super Resolution GAN and Enhanced One"""
-
     def __init__(self):
         super(Discriminator, self).__init__()
 
@@ -114,7 +113,7 @@ class Generator_SRGAN(nn.Module):
         )
 
         num_upsampling = int(math.log(scale_factor, 2))
-        block4 = []
+        block4 = list()
 
         for i in range(num_upsampling):
             block4 += [

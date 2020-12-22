@@ -1,5 +1,4 @@
 import os
-import numpy as np
 
 import torch
 from torchvision.utils import save_image
@@ -15,6 +14,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def single_inference():
 
+    # Inference Path #
     results_path = './results/single/'
     if not os.path.exists(results_path):
         os.makedirs(results_path)
@@ -31,6 +31,7 @@ def single_inference():
     SRGAN.load_state_dict(torch.load(srgan_weight_path))
     ESRGAN.load_state_dict(torch.load(esrgan_weight_path))
 
+    # Evaluation Mode #
     SRGAN.eval()
 
     # Prepare Data Loader #
@@ -56,17 +57,10 @@ def single_inference():
             fake_high_esr = ESRGAN(low.detach())
 
         # Normalize and Save Images #
-        save_image(denorm(bicubic.data),
-                   os.path.join(results_path, 'Inference_Samples_BICUBIC_%03d.png' % (i+1)))
-
-        save_image(denorm(fake_high_sr.data),
-                   os.path.join(results_path, 'Inference_Samples_SRGAN_%03d.png' % (i+1)))
-
-        save_image(denorm(fake_high_esr.data),
-                   os.path.join(results_path, 'Inference_Samples_ESRGAN_%03d.png' % (i+1)))
-
-        save_image(denorm(high.data),
-                   os.path.join(results_path, 'Inference_Samples_TARGET_%03d.png' % (i+1)))
+        save_image(denorm(bicubic.data), os.path.join(results_path, 'Inference_Samples_BICUBIC_%03d.png' % (i+1)))
+        save_image(denorm(fake_high_sr.data), os.path.join(results_path, 'Inference_Samples_SRGAN_%03d.png' % (i+1)))
+        save_image(denorm(fake_high_esr.data), os.path.join(results_path, 'Inference_Samples_ESRGAN_%03d.png' % (i+1)))
+        save_image(denorm(high.data), os.path.join(results_path, 'Inference_Samples_TARGET_%03d.png' % (i+1)))
 
 
 if __name__ == "__main__":
