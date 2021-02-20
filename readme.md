@@ -1,5 +1,8 @@
 # Implementations of Super Resolution via Generative Models using PyTorch
 
+## This repository is no longer maintained. Please visit here: *[Single Image Super Resolution](https://github.com/hee9joon/Single-Image-Super-Resolution)*.
+
+
 ### 0. Introduction
 This repository contains implementations of SRGAN and ESRGAN.
 - [Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](https://arxiv.org/abs/1609.04802)
